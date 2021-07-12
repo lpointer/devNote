@@ -1,0 +1,173 @@
+## 2020-2-5 23:34:49
+
+* 一般遇到这些问题 Process 'command 'D:\xxx\bin\java.exe'' finished with non-zero exit value 1 ；、Process 'command 'D:\xxx\bin\java.exe'' finished with non-zero exit value 2 ；、Process 'command 'D:\xxx\bin\java.exe'' finished with non-zero exit value 3
+  * 解决方案链接： https://blog.csdn.net/dodod2012/article/details/86678695
+
+
+
+## 2020-5-9 11:07:53
+
+* 冰箱APP 导航栏收缩后，高度发生改变。导致页面效果变形
+* APP多个页面之间需要无规律的跳转，存在问题上个页面没有关闭，内存泄露等问题，栈内会存在多个activity，难以管理。如果打开一个新的页面，把上个的activity关闭finish了，点击按钮的返回键就会直接退出APP，因为获取不到上个activity。
+  * 解决方案：把已经打开的activity放在一个list里面进行管理。在页面隐藏的时候把变量和数据清除防止内存泄露。
+
+
+
+### 2020-8-12 22:43:35
+
+APP医护人员自动退出问题
+
+账号已经退出，并且有日志显示已经执行相关操作，比如我给一个TextView重新赋值，并且获取新的内容，日志已经显示有变动了，但是页面的组件却没有变化。
+
+
+
+原因：未找到具体原因为什么执行了没有发生变化，猜测是因为线程问题和static的问题
+
+
+
+解决方案： 重新打开该页面。
+
+
+
+新问题：
+
+此时也是有一个问题，重新打开当前页面也不会发生数据变化。这个原因就是因为当前activity已经在栈里面有运行着了，重新打开不会执行onCreate，所以赋值改变组件也是没有作用的。
+
+解决方案：把栈内所有的activity关闭，在重新打开该页面。
+
+
+
+### 2020-9-3 20:11:04
+
+使用`Handler`来更新全局UI的时候，有的全局变量`activity`在`create`和`finish`时候，都有重新改变，`baseActivity`也有进行改变。但是在`baseActivity`方法里面获取的这个变量是还是在上一个`activity`的状态，在重新显示的时候改变是无效的，如下：
+
+``` java
+@Override
+protected void onResume() {
+    context = this;
+    super.onResume();
+}
+```
+
+所以，在`baseActivity`其他方法里面使用`content`就不是当前的`activity`，会存在问题。比如使用弹出框的时候，会出现报错
+
+`Unable to add window -- token android.os.BinderProxy@4c8b0dc is not valid; is your activity running?`
+
+解决这种问题，就是要获取当前页面的`activity`
+
+如果获取不到的话，可以定义一个`Map<String,Activity>`  listMap ,在加载页面的把当前activity名称和this存进去。
+
+在需要的时候使用当前`activity名称`获取对应的this就ok
+
+
+
+### 2020-9-11 
+
+问题场景：在做实时时间的时候，每次新打开一个页面，就开启一个线程，而已经开启的线程没有关闭和结束。所以开启线程过多，可能导致Android系统卡死假死现象（看异常日志是说有过多的线程问题）。
+
+解决：不用线程做实时时间，使用`Handler和Runnable`，每次页面销毁的时候把当前的`Runnable`结束。
+
+
+
+
+
+### 2020-9-15 
+
+1、如填30天，获取30天后的值（2020-10-15），保存到缓存里面
+
+2、打开APP，获取当天的日志，判断与缓存里面的日期是否相等
+
+
+
+### 2020-11-12
+
+c-spd-rf耗材领用业务加载和删除单品码逻辑难实现
+
+
+
+### 2020-12-23
+
+编译时报以下错误
+
+``` java
+Could not get unknown property 'bootClasspath' for object of type org.gradle.api.tasks.compile.CompileOptions.
+```
+
+因为是在 `build.gradle` 使用了 `apply plugin: 'me.tatarka.retrolambda'` (lambda) 
+
+原因是因为3.0版本以后，AS自身就支持lambda
+
+
+
+### 2021-4-23 22:41:31
+
+场景：在使用OKhttp的时候，网络比较差时和在弱网的情况下，使用异步请求接口，在短时间内（比如3秒内）进行了多次请求。
+
+然后在onFailure处理的时候，使用了`Looper.prepare();Looper.loop();`进行操作UI提示错误信息。 
+
+因为是调用了多次接口，导致执行了多个 `Looper.prepare();Looper.loop();` 出现页面假死状态。
+
+会导致后面的请求无法继续，严重可能会出现页面无法操作。
+
+解决方法：使用线程池，创建一个单例的线程，使用线程来替换 `Looper.prepare();Looper.loop();` 解决。
+
+猜测原因：因为Looper是一个用来给线程循环的，多次进行创建就会导致这些意想不到的问题
+
+
+
+### 2021-5-12 09:59:18
+
+在Android Studio - help  - Edit Coustom VM Options - 创建了 `studio64.exe.vmoptions`  文件 ，内容为 `Dfile.encoding=UTF-8`
+
+导致弹出框的问题出现，卸载了编辑器都无法解决。
+
+
+其实解决方法很简单 ，在 `"C:\Users\{Your Username}\AppData\Roaming\Google\{Android Studio Version}"` 把 `studio64.exe.vmoptions`  删除即可。
+
+
+
+### 2021-6-24
+
+在GitHub下载的代码，运行时报`Failed to notify project evaluation listener` 错误，一般都是该项目使用的 `项目级别 build.gradle` 里面的 `buildscript.dependencies.classpath ` 的版本和当前as的对应不上，修改 `build.gradle` 里面的版本为和as的版本就解决
+
+
+
+### 2021-7-5 
+
+使用rxjava和Retrofit封装请求的时候提示 `Unable to create converter for com.ebig.app.lib_bean.common.Result<com.ebig.app.lib_bean.common.systemManage.DictBean>` 错误
+
+
+
+### 2021-7-7 
+
+使用okhttp3的时候，直接这样添加 `header` 无效果
+
+``` java
+//无效
+request = request.newBuilder()
+    .addHeader("token",token)
+    .build();
+
+//需要这样添加
+Request.Builder builder = request.newBuilder();
+builder.addHeader("token",token);
+request = builder.build();
+```
+
+
+
+
+
+## 编辑命令行
+
+* `gradlew compileDebugJavaWithJavac #可以查看编译报错的详细信息`
+
+
+
+
+
+```java
+List<User> userList = DBManager.getInstance().queryUserByAccountID(groupId, accountID);
+boolean isSuccess = DBManager.getInstance().deleteUser(accountAdapter.getCurrentAccount().getFaceFeature(), cabinetGroupCode);
+```
+
