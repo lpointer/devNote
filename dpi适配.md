@@ -1,3 +1,6 @@
+# DPI适配
+
+``` java
 /**
 * 屏幕适配
 * 设计图宽360dp
@@ -36,3 +39,23 @@ private static void setCustomDensity(@NonNull Activity activity, @NonNull final 
     activityDisplayMetrics.scaledDensity = targetScaledDensity;
     activityDisplayMetrics.densityDpi = targetDensityDpi;
 }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
