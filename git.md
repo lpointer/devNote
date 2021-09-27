@@ -2,6 +2,16 @@
 
 ``` cmd
 
+$ git remote add origin git@github.com:lpointer/devNote.git  #本地关联远程分支	(可关联多个远程分支)
+$ git remote add origin git@gitee.com:lpointer/devNote.git  #本地关联远程分支	(可关联多个远程分支)
+$ git remote -v #查看已关联的分支
+$ git remote rm origin #移除已关联的远程分支
+$ git push github master # 推送到github的远程分支		(在关联多个远程分支的情况下)
+$ git push gitee master  # 推送到gitee的远程分支		(在关联多个远程分支的情况下) 
+$ git pull github master # 拉取github的远程分支		(在关联多个远程分支的情况下) 
+$ git pull gitee master  # 拉取gitee的远程分支			(在关联多个远程分支的情况下) 
+
+
 $ git clone https://github.com/lpointer/devNote.git #拉取或关联仓库
 
 ## 配置相关
