@@ -53,6 +53,10 @@ $ git push origin develop # 推送到指定的远程分支
 $ git push origin develop_ly:develop_ly #把自己的分支推送到远程
 $ git push origin --delete xxx	#删除远程分支
 
+## tag相关
+$ git tag # 查看tag的命令
+$ git tag tagName -m "message" #创建tag
+
 ## 回退相关
 $ git reset HEAD^            # 回退所有内容到上一个版本  
 $ git reset HEAD^ [file] 	 # 回退 file 文件的版本到上一个版本  
