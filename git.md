@@ -43,7 +43,8 @@ $ git commit -m # 提交所有暂存区文件至本地仓库 m = message提交�
 $ git commit [file] [file2] ... -m # 提交暂存区指定文件至本地仓库 m = message提交备注信息
 $ git commit --amend	# 追加提交暂存区所有文件至本地仓库，上个分支未推送到远程可以使用（不够熟悉情况下慎用！！！）
 $ git commit -a		# -a 参数设置修改文件后不需要执行 git add 命令，直接来提交
-$ git checkout	#放弃当前修改
+$ git checkout .	#放弃当前全部修改
+$ git checkout -- filename #放弃工作区中某个文件的修改
 
 ## 推送拉取远程分支相关
 $ git pull #拉取远程代码
