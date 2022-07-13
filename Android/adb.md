@@ -50,32 +50,39 @@ adb shell am start com.android.settings/com.android.settings.Settings
 
 查看连接计算机的设备：
 
-```undefined
+``` cmd
  adb devices
 ```
 
 重启机器：
 
-```undefined
+``` cmd
  adb reboot
 ```
 
 重启到bootloader，即刷机模式：
 
-```undefined
+``` cmd
  adb reboot bootloader
 ```
 
 重启到recovery，即恢复模式：
 
-```undefined
+``` cmd
  adb reboot recovery
 ```
 
 查看log：
 
-```undefined
+``` cmd
  adb logcat
+```
+
+``` cmd
+adb logcat > E:\logcat\log.log	# 把所有的log信息都输出到log文件
+
+adb logcat TAGName:T	# 输出TAG为TAGName的I级别信息
+
 ```
 
 终止adb服务进程：
@@ -86,7 +93,7 @@ adb shell am start com.android.settings/com.android.settings.Settings
 
 重启adb服务进程：
 
-```undefined
+``` cmd
  adb start-server
 ```
 
