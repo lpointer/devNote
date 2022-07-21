@@ -1,0 +1,117 @@
+## android截图几种方式
+
+### TextureView
+
+通过getBitmap即可直接获取到bitmap，可以直接用于保存
+
+```
+textureView.getBitmap()
+```
+
+### GLSurfaceView
+
+由于是OpenGL，所以需要在继承GLTextureView.Renderer的类里面的onDrawFrame方法获取当前帧，onDrawFrame是实时更新的
+
+```java
+public void takeScreenshot(ScreenshotListener listener, GLSurfaceView surfaceView) {
+    this.screenshotListener = listener;
+    this.doScreenshot = true;
+    if (surfaceView != null) {
+        surfaceView.requestRender();
+    }
+}
+
+@Override
+public void onDrawFrame(){
+    if (this.doScreenshot) {
+        int width = (int)control.getViewSize().getX();
+        int height = (int)control.getViewSize().getY();
+        Bitmap screenshot = this.getPixels(0, 0, width, height, gl);	//获取当前帧的bitmap
+        this.screenshotListener.onScreenshotResult(screenshot);		//通过接口把bitmap传出去
+        this.screenshotListener = null;
+        this.doScreenshot = false;
+    }
+}
+
+private Bitmap getPixels(int x, int y, int w, int h, GL10 gl) {
+    int[] b = new int[w * (y + h)];
+    int[] bt = new int[w * h];
+    IntBuffer ib = IntBuffer.wrap(b);
+    ib.position(0);
+    gl.glReadPixels(x, 0, w, y + h, 6408, 5121, ib);
+    int i = 0;
+
+    for(int k = 0; i < h; ++k) {
+        for(int j = 0; j < w; ++j) {
+            int pix = b[i * w + j];
+            int pb = pix >> 16 & 255;
+            int pr = pix << 16 & 16711680;
+            int pix1 = pix & -16711936 | pr | pb;
+            bt[(h - k - 1) * w + j] = pix1;
+        }
+
+        ++i;
+    }
+
+    return Bitmap.createBitmap(bt, w, h, Config.ARGB_8888);
+}
+```
+
+### view 
+
+```java
+View view = activity.getWindow().getDecorView();	// 获取activity的DecorView，就是当前看到的屏幕
+// or
+ImageView view = findViewById(R.id.iv_view);
+
+ //允许view保存缓存信息
+view.setDrawingCacheEnabled(true);
+view.buildDrawingCache();
+// 全屏不用考虑状态栏，有导航栏需要加上导航栏高度
+Bitmap bitmap = null;
+int width = view.getWidth();
+int height = view.getHeight();
+int navigationBarHeight = 20;// 假设当前导航栏高度
+try {
+    // 通过获取当前设置的得到bitmap，获取当前缓存 =》 view.getDrawingCache()
+    bitmap = Bitmap.createBitmap(view.getDrawingCache(), 0, 0, width, height + navigationBarHeight);
+} catch (Exception e) {
+    
+}
+
+//销毁缓存信息
+view.destroyDrawingCache();
+view.setDrawingCacheEnabled(false);
+
+
+```
+
+
+
+### 保存当前bitmap到文件夹
+
+```java
+String filepath = this.getCacheDir() + "/screenshot.png"; //获取当前应用缓存路径 =》 this.getCacheDir()，改路径在app卸载或者被清除数据时，路径下的文件也获取全部清除
+
+/**
+ * 把batmap 转file
+ *
+ * @param bitmap
+ * @param filepath 文件路径
+ * @param quality 压缩率 0-100，越大越清晰
+ */
+public static File saveBitmapFile(Bitmap bitmap, String filepath, int quality) {
+    File file = new File(filepath);//将要保存图片的路径
+    try {
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, bos);
+        bos.flush();
+        bos.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return file;
+}
+
+
+```
