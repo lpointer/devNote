@@ -11,6 +11,8 @@ $ git push gitee master  # 推送到gitee的远程分支		(在关联多个远程
 $ git pull github master # 拉取github的远程分支		(在关联多个远程分支的情况下) 
 $ git pull gitee master  # 拉取gitee的远程分支			(在关联多个远程分支的情况下) 
 
+$ git remote set-url origin git@github.com:lpointer/devNote.git   # 切换git源
+
 
 $ git clone https://github.com/lpointer/devNote.git #拉取或关联仓库
 
