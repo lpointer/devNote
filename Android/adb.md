@@ -337,53 +337,62 @@ adb shell dumpsys bluetooth_manager | findstr enabled     返回结果是true或
 11. 开启WiFi：adb shell svc wifi enable
 12. 关闭WiFi：adb shell svc wifi disable
 13. 打开蓝牙设置界面：adb shell am start -a android.settings.BLUETOOTH_SETTINGS
-14. 获取手机休眠时间：adb shell settings get system screen_off_timeout
-15. 更改手机休眠时间：adb shell settings put system screen_off_timeout 600000（10分钟）
-16. 获取系统默认输入法：adb shell settings get secure default_input_method
-17. 获取手机是否为自动亮度：adb shell settings get system screen_brightness_mode  （0代表非自动，1代表为自动）
-18. 设置手机为自动调整亮度：adb shell settings put system screen_brightness_mode 1    
-19. 获取手机当前亮度：adb shell settings get system screen_brightness
-20. 设置手机亮度（0-255）：adb shell settings put system screen_brightness 350
-21. 打开定位设置界面：adb shell am start -a android.settings.LOCATION_SOURCE_SETTINGS
-22. 开启定位：adb shell settings put secure location_providers_allowed +gps
-23. 关闭定位：adb shell settings put secure location_providers_allowed -gps
-24. 查看定位方式：adb shell settings get secure location_providers_allowed  （前提是位置信息开启）
-25. 拨打电话：adb shell am start -a android.intent.action.CALL tel:8888888888888
-26. 发送短信：adb shell am start -a android.intent.action.SENDTO -d sms:10086（发送目的号码） --es sms_body "hello"（短信内容） --ez exit_on_sent true 
-27. 获取应用包名：adb shell dumpsys window windows | findstr  mFocusedApp 
-28. 清除应用数据与缓存: adb shell pm clear cn.com.test.mobile
-29. 启动应用: adb shell am start -n cn.com.test.mobile/.ui.SplashActivity 
-30. 停止应用：adb shell am force-stop cn.com.test.mobile
-31. 飞行模式：adb shell settings set global airplane_mode_on   (0==关闭，1==开启)
-32. 开启飞行模式：adb shell settings put global airplane_mode_on 1
-33. 手机震动测试（前提手机root）：①adb shell ②echo '3000'>/sys/devices/virtual/timed_output/vibrator/enable
-34. 向上滑：adb shell input touchscreen swipe 930 880 930 380 
-35. 向下滑：adb shell input touchscreen swipe 930 380 930 880
-36. 向右滑：adb shell input touchscreen swipe 330 880 930 880 
-37. 向左滑：adb shell input touchscreen swipe 930 880 330 880
-38. 模拟鼠标点击操作：adb shell input mouse tap 100 500
-39. 长按：adb shell input swipe startX startY startX startY 500
-40. 滑动解锁：adb shell input swipe 300 1000 300 500
-41. 冷启动app：adb shell am start -W -n package/activity
-42. 热启动：①停止app： adb shell input keyevent 3  ②adb shell am start -W -n package/activity
-43. 查看内存占用情况：adb -s 设备号 shell top -m 进程数量 -n 数据的刷新次数 -s 按哪列进行排序 -d 刷新时间间隔（默认5秒）
-44. 切换手机电池为非充电状态： adb shell dumpsys battery set status 1
-45. 改变手机电量： adb shell dumpsys battery set level 58
-46. 获取当前电量：adb shell cat /sys/class/power_supply/battery/capacity
-47. 手机截屏：adb shell /system/bin/screencap -p /sdcard/screenshot.png
-48. 录制屏幕：adb shell screenrecord --time-limit 10 /sdcard/demo.mp4
-49. 获取手机型号：adb shell getprop ro.product.model
-50. 获取电池信息：adb shell dumpsys battery  
-51. 获取屏幕分辨率：adb shell wm size
-52. 获取屏幕密度：adb shell wm density
-53. 显示屏参数：adb shell dumpsys window displays
-54. 获取手机IP地址：adb shell ifconfig | findstr Mask
-55. 查看WiFi局域网地址：adb shell ifconfig wlan0
-56. 显示区域位置：adb shell wm overscan 0,0,0,200  （四个数字分别表示距离左、上、右、下边缘的留白像素，以上命令表示将屏幕底部 200px 留白）
-57. 恢复原显示区域命令：adb shell wm overscan reset
-58. 获取USB调试模式：adb shell settings get global adb_enabled
-59. 关闭USB调试模式：adb shell settings put global adb_enabled 0
-60. 状态栏和导航栏的显示隐藏：
+14. 打开蓝牙：adb shell svc bluetooth enable
+15. 关闭蓝牙：adb shell svc bluetooth disable
+16. 强制安装版本号更低的apk：adb install -r -d “C:\xx.apk”
+17. 对指定应用进行500次模拟触摸事件：adb shell monkey -p com.yzl.test -v 500
+18. 查看蓝牙btsnoop日志setprop persist.bluetooth.btsnoopenable true
+setprop persist.bluetooth.btsnoopsavelast true
+setprop persist.bluetooth.btsnooppath /data/misc/bluedroid/btsnoop_hci.cfa
+setprop persist.bluetooth.btsnooplogmode full
+set完后重新开关一下蓝牙，可以看到/data/misc/bluedroid/下多了btsnoop_hci.cfa
+19. 获取手机休眠时间：adb shell settings get system screen_off_timeout
+20. 更改手机休眠时间：adb shell settings put system screen_off_timeout 600000（10分钟）
+21. 获取系统默认输入法：adb shell settings get secure default_input_method
+22. 获取手机是否为自动亮度：adb shell settings get system screen_brightness_mode  （0代表非自动，1代表为自动）
+23. 设置手机为自动调整亮度：adb shell settings put system screen_brightness_mode 1    
+24. 获取手机当前亮度：adb shell settings get system screen_brightness
+25. 设置手机亮度（0-255）：adb shell settings put system screen_brightness 350
+26. 打开定位设置界面：adb shell am start -a android.settings.LOCATION_SOURCE_SETTINGS
+27. 开启定位：adb shell settings put secure location_providers_allowed +gps
+28. 关闭定位：adb shell settings put secure location_providers_allowed -gps
+29. 查看定位方式：adb shell settings get secure location_providers_allowed  （前提是位置信息开启）
+30. 拨打电话：adb shell am start -a android.intent.action.CALL tel:8888888888888
+31. 发送短信：adb shell am start -a android.intent.action.SENDTO -d sms:10086（发送目的号码） --es sms_body "hello"（短信内容） --ez exit_on_sent true 
+32. 获取应用包名：adb shell dumpsys window windows | findstr  mFocusedApp 
+33. 清除应用数据与缓存: adb shell pm clear cn.com.test.mobile
+34. 启动应用: adb shell am start -n cn.com.test.mobile/.ui.SplashActivity 
+35. 停止应用：adb shell am force-stop cn.com.test.mobile
+36. 飞行模式：adb shell settings set global airplane_mode_on   (0==关闭，1==开启)
+37. 开启飞行模式：adb shell settings put global airplane_mode_on 1
+38. 手机震动测试（前提手机root）：①adb shell ②echo '3000'>/sys/devices/virtual/timed_output/vibrator/enable
+39. 向上滑：adb shell input touchscreen swipe 930 880 930 380 
+40. 向下滑：adb shell input touchscreen swipe 930 380 930 880
+41. 向右滑：adb shell input touchscreen swipe 330 880 930 880 
+42. 向左滑：adb shell input touchscreen swipe 930 880 330 880
+43. 模拟鼠标点击操作：adb shell input mouse tap 100 500
+44. 长按：adb shell input swipe startX startY startX startY 500
+45. 滑动解锁：adb shell input swipe 300 1000 300 500
+46. 冷启动app：adb shell am start -W -n package/activity
+47. 热启动：①停止app： adb shell input keyevent 3  ②adb shell am start -W -n package/activity
+48. 查看内存占用情况：adb -s 设备号 shell top -m 进程数量 -n 数据的刷新次数 -s 按哪列进行排序 -d 刷新时间间隔（默认5秒）
+49. 切换手机电池为非充电状态： adb shell dumpsys battery set status 1
+50. 改变手机电量： adb shell dumpsys battery set level 58
+51. 获取当前电量：adb shell cat /sys/class/power_supply/battery/capacity
+52. 手机截屏：adb shell /system/bin/screencap -p /sdcard/screenshot.png
+53. 录制屏幕：adb shell screenrecord --time-limit 10 /sdcard/demo.mp4
+54. 获取手机型号：adb shell getprop ro.product.model
+55. 获取电池信息：adb shell dumpsys battery  
+56. 获取屏幕分辨率：adb shell wm size
+57. 获取屏幕密度：adb shell wm density
+58. 显示屏参数：adb shell dumpsys window displays
+59. 获取手机IP地址：adb shell ifconfig | findstr Mask
+60. 查看WiFi局域网地址：adb shell ifconfig wlan0
+61. 显示区域位置：adb shell wm overscan 0,0,0,200  （四个数字分别表示距离左、上、右、下边缘的留白像素，以上命令表示将屏幕底部 200px 留白）
+62. 恢复原显示区域命令：adb shell wm overscan reset
+63. 获取USB调试模式：adb shell settings get global adb_enabled
+64. 关闭USB调试模式：adb shell settings put global adb_enabled 0
+65. 状态栏和导航栏的显示隐藏：
 adb shell settings put global policy_control <key-values>
 <key-values> 可由如下几种键及其对应的值组成，格式为 <key1>=<value1>:<key2>=<value2>。
   immersive.full----------同时隐藏
