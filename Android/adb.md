@@ -217,7 +217,7 @@ adb push <local> <remote>
 从设备复制文件到本地：
 
 ```xml
-adb pull <remote>  <local>
+adb pull /sdcard/logs/xxx.log  e:\log
 ```
 
 列出目录下的文件和文件夹，等同于dos中的dir命令：
@@ -321,6 +321,19 @@ adb shell settings put system screen_off_timeout 10000 # 10秒
 ``` cmake
 adb shell settings list system grep timeout
 ```
+
+全局搜索文件：
+
+``` cmake
+busybox find / | grep filename
+```
+
+查看所有包名：
+
+``` cmake
+adb shell pm list packages
+```
+
 
 1. 获取内部版本号： adb shell getprop ro.build.display.innerver
 2. 获取按键值： adb shell getevent
