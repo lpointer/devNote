@@ -145,6 +145,12 @@ adb uninstall -k <package> //比如：adb uninstall -k com.baidu.search
 adb shell am start -n <package_name>/.<activity_class_name>
 ```
 
+查看单个app的内存使用情况：
+
+```undefined
+adb shell dumpsys meminfo app的包名
+```
+
 查看设备cpu和内存占用情况：
 
 ```undefined
