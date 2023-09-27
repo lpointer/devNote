@@ -340,6 +340,16 @@ busybox find / | grep filename
 adb shell pm list packages
 ```
 
+设置音量并且显示音量UI
+```
+//stream 3表示多媒体，10表示音量值
+adb shell media volume --show --stream 3 --set 10
+```
+
+获取当前音量
+```
+adb shell media volume --stream 3 --get
+```
 
 1. 获取内部版本号： adb shell getprop ro.build.display.innerver
 2. 获取按键值： adb shell getevent
